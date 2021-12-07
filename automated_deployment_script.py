@@ -3,7 +3,7 @@ from netmiko import ConnectHandler
 import re
 import sys
 import paramiko
-fd = open(r'C:\Users\"user folder here"\\PythonOutput.txt','w')
+fd = open(r'C:\Users\Chris\\PythonOutput.txt','w')
 sys.stdout = fd 
 platform = 'cisco_ios'
 username = 'admin'
@@ -12,7 +12,7 @@ password = 'admin'
 #this function will assist in getting a unique ID for the device.  
 def SerialNumber():
     showIP = device.send_command("show version | i ID")
-    r1 = re.search(r"9FRHISHMK4J", showIP)
+    r1 = re.search(r"[^D ]*$", showIP)
     xy = r1.group()
     device.send_config_set('file prompt quiet')
     device.send_command('copy tftp://172.16.1.21/' +xy+ '/switch-config flash:/switch-config')
@@ -21,7 +21,7 @@ def SerialNumber():
 #this function will look at firmware and download/set new firmware when needed
 def Version():
     showIP = device.send_command("show version | i image")
-    r1 = re.search(r"vios_l2-adventerprisek9-m", showIP)
+    r1 = re.search(r'(?<=\/).*?(?=")', showIP)
     xy = r1.group()
     if xy == "vios_l2-adventerprisek9-m":
         device.send_config_set('file prompt quiet')
@@ -40,7 +40,7 @@ def Reload():
     device.send_command('\n')
 
 ##Make this the directory of the IPlist.txt
-ip_add_file = open(r'C:\Users\"user folder here"\\IPAddressList.txt','r')
+ip_add_file = open(r'C:\Users\Chris\\IPAddressList.txt','r')
 
 for host in ip_add_file:
         device = ConnectHandler(device_type=platform, ip=host, username=username, password=password)
@@ -48,8 +48,8 @@ for host in ip_add_file:
         Version()
         print(SerialNumber())
         print(Version())
-        CopyConfig()
-        Reload()
+        #CopyConfig()
+        #Reload()
 
 fd.close()
 
