@@ -48,8 +48,8 @@ for host in ip_add_file:
         Version()
         print(SerialNumber())
         print(Version())
-        #CopyConfig()
-        #Reload()
+        CopyConfig()
+        Reload()
 
 fd.close()
 
